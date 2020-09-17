@@ -7,7 +7,7 @@
 
 class Const {
 private:
-    std::unordered_map<std::string, int> COMP_PRICE;
+    std::unordered_map<std::string, int> COMP_PRICE_MAP;
 
 public:
     Const();
@@ -25,6 +25,7 @@ public:
     static const std::string ORDERS_PATH;
     static const std::string BUNDLE_NAME;
     static const std::string REPORT_NAME;
+    static const std::string SCHEDULE_NAME;
     static const std::vector<std::vector<int>> compMap;
     static const std::vector<std::string> nameMap;
     static const std::vector<int> costMap;
@@ -36,14 +37,15 @@ const std::string Const::REPORTS_PATH =  "../reports/";
 const std::string Const::ORDERS_PATH = "../orders/";
 const std::string Const::BUNDLE_NAME = "orderbundle";
 const std::string Const::REPORT_NAME = "report";
+const std::string Const::SCHEDULE_NAME = "schedule";
 
 Const::Const() {
     for (int i = 0; i < nameMap.size(); i++)
-        COMP_PRICE.insert({nameMap[i], costMap[i]});
+        COMP_PRICE_MAP.insert({nameMap[i], costMap[i]});
 }
 
 int Const::compPrice(std::string name) {
-    return COMP_PRICE[name];
+    return COMP_PRICE_MAP[name];
 }
 const std::vector<int> Const::cycleMap = {4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7 };
 

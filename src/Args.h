@@ -42,7 +42,7 @@ public:
                 if (i + 1 < argc) {
                     std::string path(argv[i + 1]);
                     if (util::fileExists(path)) {
-                        ReportGen::gen(path);
+                        ReportGen::gen(path, std::cout);
                         return 0;
                     } else {
                         std::cerr << "file path does not exist\n";

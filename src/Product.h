@@ -18,7 +18,7 @@ public:
 };
 
 void Product::setCost() {
-    if (id_ < 0 || id_ > 16) {
+    if (id_ < 0 || id_ > Const::cycleMap.size()) {
         std::cout <<"Product id is out of range!" << std::endl;
     } else {
         // Price of components

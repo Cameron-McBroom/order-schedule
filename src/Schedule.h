@@ -11,6 +11,7 @@
 #include "Order.h"
 #include "QuickSort.h"
 #include "Utility.h"
+#include "libs/csvfile.h"
 
 class Schedule {
 protected:
@@ -19,7 +20,6 @@ protected:
     std::vector<Order> ordersCancelled_;
     std::unordered_map<int, int> PCsProduce_;
     std::unordered_map<std::string, int> componentProduce_;
-    std::unordered_map<std::string, int> COMP_COST_MAP;
     int totalCyclesUsed_;
     int totalRevenue_;
     double totalCancelCost_;
@@ -28,11 +28,13 @@ protected:
     double netProfit_;
     void calculateDiscount();
     double salesExpenses();
+    bool isDiscEligible();
 
 public:
     Schedule(std::istream &orderBundle);
     virtual void createSchedule();
     void makeReport(std::ostream &out);
+    void makeReport(csvfile &csv);
 };
 
 Schedule::Schedule(std::istream &orderBundle)
@@ -40,15 +42,39 @@ Schedule::Schedule(std::istream &orderBundle)
       totalCyclesUsed_(0), grossProfit_(0), netProfit_(0), totalRevenue_(0), discount_(0), totalCancelCost_(0)
 {}
 
+void Schedule::createSchedule() {
+    for (const auto &order: ordersReceived_) {
+        if (totalCyclesUsed_ < Const::MAX_CYCLES && totalCyclesUsed_ + order.getCycles() <= Const::MAX_CYCLES) {
+            ordersSatisfied_.push_back(order);
+            totalCyclesUsed_ += order.getCycles();
+            PCsProduce_[order.getPCId()] += order.getQuantity();
+
+            // Loop through components used and add to component map
+            for (int i = 0; i < 4; i++)
+                componentProduce_[order.getCompName(i)] += order.getQuantity();
+
+            // Add profit & rev for each order
+            totalRevenue_ += order.getRevenue();
+            grossProfit_ += order.getProfitTotal();
+
+        } else {
+            ordersCancelled_.push_back(order);
+            totalCancelCost_ += order.getCancelCost();
+        }
+    }
+    calculateDiscount();
+}
+
 void Schedule::calculateDiscount() {
     for (auto const &pair: componentProduce_)
-        if (pair.first.find("CPU") != std::string::npos)
-            if (pair.second >= Const::CPU_DISC_REQ) {
-                double priceBefore = Const().compPrice(pair.first) * pair.second;
-                double discPrice = (Const().compPrice(pair.first) * pair.second) * Const::CPU_DISCOUNT;
-                discount_ += (priceBefore - discPrice);
-            }
+        if (pair.first.find("CPU") != std::string::npos && pair.second >= Const::CPU_DISC_REQ) {
+            discount_ += (Const().compPrice(pair.first) * pair.second) * Const::CPU_DISCOUNT;
+        }
     netProfit_ = grossProfit_ + discount_;
+}
+
+double Schedule::salesExpenses() {
+    return grossProfit_ - (totalCyclesUsed_* Const::CYCLE_COST) - totalCancelCost_;
 }
 
 void Schedule::makeReport(std::ostream &out) {
@@ -91,29 +117,29 @@ void Schedule::makeReport(std::ostream &out) {
     out << std::setfill(' ') << std::endl;
 }
 
-double Schedule::salesExpenses() {
-    return grossProfit_ - (totalCyclesUsed_* Const::CYCLE_COST) - totalCancelCost_;
+void Schedule::makeReport(csvfile &csv) {
+    // Satisfied orders
+    csv << "SATISFIED ORDERS" << endrow;
+    csv << "" <<"Order Id" << "PC Product Id" << "Quantity" << "Profit" << "Discount" << "Net Profit" <<endrow;
+    for (const auto &order: ordersSatisfied_)
+        csv << "" << order.getOrderId() << order.getPCId() << order.getQuantity() << order.getProfitTotal()
+            << order.getDiscount() << order.getProfitTotal() + order.getDiscount() << endrow;
+    csv << "TOTALS" << "" << "" << "" << grossProfit_ << discount_ << netProfit_ << endrow;
+
+    // Cancelled orders
+    csv << endrow << endrow;
+    csv <<  "CANCELLED ORDERS" << endrow;
+    csv << ""<< "Order Id" << "PC Product Id" << "Quantity" << "Total Profit" << "Cancellation Cost" << endrow;
+    for (const auto &order: ordersCancelled_)
+        csv << order.getOrderId() << order.getPCId() << order.getQuantity()
+            << order.getProfitTotal() << order.getCancelCost() << endrow;
+    csv << "TOTALS" << "" << "" << "" << grossProfit_ << discount_ << totalCancelCost_ << endrow;
+
 }
 
-void Schedule::createSchedule() {
-    for (const auto &order: ordersReceived_) {
-        if (totalCyclesUsed_ < Const::MAX_CYCLES && totalCyclesUsed_ + order.getCycles() <= Const::MAX_CYCLES) {
-            ordersSatisfied_.push_back(order);
-            totalCyclesUsed_ += order.getCycles();
-            PCsProduce_[order.getPCId()] += order.getQuantity();
-
-            // Loop through components used and add to component map
-            for (int i = 0; i < 4; i++)
-                componentProduce_[order.getCompName(i)] += order.getQuantity();
-
-            // Add profit & rev for each order
-            totalRevenue_ += order.getRevenue();
-            grossProfit_ += order.getProfitTotal();
-
-        } else {
-            ordersCancelled_.push_back(order);
-            totalCancelCost_ += order.getCancelCost();
-        }
-    }
-    calculateDiscount();
+bool Schedule::isDiscEligible(const Order &order) {
+    // TODO make this work
+    for (int i = 0; i < 4; i++)
+        if (order.getCompName(i).find("CPU") != std::string::npos && componentProduce_[order.getCompName(i)] > 500)
+            return true;
 }

@@ -10,7 +10,8 @@ private:
         for (const auto &comp: allComponents_) {
             // give larger values based on number of components > 500 AND price of CPU
             if (comp.first.find("CPU") != std::string::npos && comp.second > Const::CPU_DISC_REQ)
-                CPUExtraVal_[comp.first] = ((comp.second - Const::CPU_DISC_REQ) * (Const().compPrice(comp.first) * Const::CPU_DISCOUNT)* 1.35);
+                CPUExtraVal_[comp.first] =
+                        ((comp.second - Const::CPU_DISC_REQ) * (Const().compPrice(comp.first) * Const::CPU_DISCOUNT)* 1.35);
         }
     }
 

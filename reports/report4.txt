@@ -11,7 +11,7 @@ Total Cycle Cost:                             $   -999,600
 Total Cancellation Cost:                      $    -60,529
 
 Gross Profit (after cancellations):           $  2,258,895
-Net Profit (including discounts):             $  3,688,975
+Net Profit (including discounts):             $  2,572,815
 ===========================================================
 NO. PC PRODUCED
 PC0___________________________109

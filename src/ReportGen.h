@@ -5,6 +5,7 @@
 #include "BundleGenerator.h"
 #include "Schedule.h"
 #include "SmartSchedule.h"
+#include "libs/csvfile.h"
 
 class ReportGen {
 private:
@@ -14,10 +15,13 @@ private:
 
 public:
     ReportGen();
-    static void gen(const std::string &path, std::ostream &out);
     void makeReports();
     void genBundleMakeReport();
     void reScheduleAll();
+
+    template <typename ostream>
+    static void gen(const std::string &path, ostream &out);
+
 };
 
 ReportGen::ReportGen() {
@@ -38,18 +42,12 @@ void ReportGen::updateReportIdx() {
 void ReportGen::makeReports() {
     while (lastReportIdx_ < lastBundleIdx_) {
         auto idxString = (lastReportIdx_ == 0 ? "" : std::to_string(lastReportIdx_));
-
-        // Open corresponding bundle & report output file
-        std::ifstream bundle(Const::ORDERS_PATH+ Const::BUNDLE_NAME+idxString+".txt");
-        std::ofstream report(Const::REPORTS_PATH+Const::REPORT_NAME+idxString+".txt");
-
-        Schedule *orders;
-        orders = new SmartSchedule(bundle);
-        orders->createSchedule();
-        orders->makeReport(report);
-        report.close();
-        delete orders;
-        std::cout << "Generating Report Number: " << lastReportIdx_ << std::endl;
+        std::string bundle = Const::ORDERS_PATH+Const::BUNDLE_NAME+idxString+".txt";
+        std::ofstream txtReport(Const::REPORTS_PATH+Const::REPORT_NAME+idxString+".txt");
+        csvfile csv(Const::REPORTS_PATH+Const::SCHEDULE_NAME+idxString+".csv");
+        gen(bundle, txtReport);
+        gen(bundle, csv);
+        updateReportIdx();
         updateReportIdx();
     }
 }
@@ -64,23 +62,16 @@ void ReportGen::reScheduleAll() {
     for (int i = 0; i < lastBundleIdx_; ++i) {
         // Check if it is 0
         auto idxString = (i == 0 ? "" : std::to_string(i));
-
-        // Open corresponding bundle & report output file
-        std::ifstream bundle(Const::ORDERS_PATH+Const::BUNDLE_NAME+idxString+".txt");
-        std::ofstream report(Const::REPORTS_PATH+Const::REPORT_NAME+idxString+".txt");
-
-        Schedule *orders;
-        orders = new SmartSchedule(bundle);
-        orders->createSchedule();
-        orders->makeReport(report);
-        report.close();
-        delete orders;
-        std::cout << "Generating Report Number: " << i << std::endl;
+        std::string bundle = Const::ORDERS_PATH+Const::BUNDLE_NAME+idxString+".txt";
+        std::ofstream txtReport(Const::REPORTS_PATH+Const::REPORT_NAME+idxString+".txt");
+        csvfile csv(Const::REPORTS_PATH+Const::SCHEDULE_NAME+idxString+".csv");
+        gen(bundle, txtReport);
+        gen(bundle, csv);
         updateReportIdx();
     }
 }
-
-void ReportGen::gen(const std::string &path, std::ostream &out = std::cout) {
+template <typename ostream>
+void ReportGen::gen(const std::string &path, ostream &out) {
     std::ifstream bundle(path);
     Schedule *orders;
     orders = new SmartSchedule(bundle);
