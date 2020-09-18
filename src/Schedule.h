@@ -28,10 +28,11 @@ protected:
     double netProfit_;
     void calculateDiscount();
     double salesExpenses();
-    bool isDiscEligible();
+    double orderDiscount(const Order & order);
 
 public:
     Schedule(std::istream &orderBundle);
+    virtual ~Schedule() = default;
     virtual void createSchedule();
     void makeReport(std::ostream &out);
     void makeReport(csvfile &csv);
@@ -117,29 +118,33 @@ void Schedule::makeReport(std::ostream &out) {
     out << std::setfill(' ') << std::endl;
 }
 
+double Schedule::orderDiscount(const Order &order) {
+    double orderDiscount{0};
+    for (int i = 0; i < 4; i++)
+        if (order.getCompName(i).find("CPU") != std::string::npos && componentProduce_[order.getCompName(i)] > 500)
+            orderDiscount += Const().compPrice(order.getCompName(i)) * order.getQuantity() * Const::CPU_DISCOUNT;
+    return orderDiscount;
+}
+
 void Schedule::makeReport(csvfile &csv) {
     // Satisfied orders
-    csv << "SATISFIED ORDERS" << endrow;
-    csv << "" <<"Order Id" << "PC Product Id" << "Quantity" << "Profit" << "Discount" << "Net Profit" <<endrow;
-    for (const auto &order: ordersSatisfied_)
+    csv << "SATISFIED ORDERS"
+        << "Order Id" << "PC Product Id" << "Quantity" << "Profit" << "Discount" << "Net Profit" <<endrow;
+    for (const auto &order: ordersSatisfied_){
+        double oDiscount = orderDiscount(order);
         csv << "" << order.getOrderId() << order.getPCId() << order.getQuantity() << order.getProfitTotal()
-            << order.getDiscount() << order.getProfitTotal() + order.getDiscount() << endrow;
+            << oDiscount << order.getProfitTotal() + oDiscount << endrow;
+    }
     csv << "TOTALS" << "" << "" << "" << grossProfit_ << discount_ << netProfit_ << endrow;
 
     // Cancelled orders
     csv << endrow << endrow;
-    csv <<  "CANCELLED ORDERS" << endrow;
-    csv << ""<< "Order Id" << "PC Product Id" << "Quantity" << "Total Profit" << "Cancellation Cost" << endrow;
+    csv <<  "CANCELLED ORDERS"
+        << "Order Id" << "PC Product Id" << "Quantity" << "Total Profit" << "Cancellation Cost" << endrow;
     for (const auto &order: ordersCancelled_)
-        csv << order.getOrderId() << order.getPCId() << order.getQuantity()
+        csv << "" << order.getOrderId() << order.getPCId() << order.getQuantity()
             << order.getProfitTotal() << order.getCancelCost() << endrow;
-    csv << "TOTALS" << "" << "" << "" << grossProfit_ << discount_ << totalCancelCost_ << endrow;
+    csv << "TOTALS" << "" << "" << grossProfit_ << discount_ << totalCancelCost_ << endrow;
 
 }
 
-bool Schedule::isDiscEligible(const Order &order) {
-    // TODO make this work
-    for (int i = 0; i < 4; i++)
-        if (order.getCompName(i).find("CPU") != std::string::npos && componentProduce_[order.getCompName(i)] > 500)
-            return true;
-}

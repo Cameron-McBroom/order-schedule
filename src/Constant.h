@@ -26,10 +26,10 @@ public:
     static const std::string BUNDLE_NAME;
     static const std::string REPORT_NAME;
     static const std::string SCHEDULE_NAME;
-    static const std::vector<std::vector<int>> compMap;
-    static const std::vector<std::string> nameMap;
-    static const std::vector<int> costMap;
-    static const std::vector<int> cycleMap;
+    static const std::array<std::array<int,4>,16> compMap;
+    static const std::array<std::string,10> nameMap;
+    static const std::array<int,10> costMap;
+    static const std::array<int,16> cycleMap;
     int compPrice(std::string name);
 };
 
@@ -47,11 +47,11 @@ Const::Const() {
 int Const::compPrice(std::string name) {
     return COMP_PRICE_MAP[name];
 }
-const std::vector<int> Const::cycleMap = {4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7 };
+const std::array<int,16> Const::cycleMap = {4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7 };
 
-const std::vector<int> Const::costMap = {1000, 1500, 1000, 1500, 250, 250, 100, 200, 300, 400};
+const std::array<int,10> Const::costMap = {1000, 1500, 1000, 1500, 250, 250, 100, 200, 300, 400};
 
-const std::vector<std::vector<int>> Const::compMap = {
+const std::array<std::array<int, 4>, 16> Const::compMap = {{
         { 0, 4, 6, 8 },
         { 0, 4, 6, 9 },
         { 0, 4, 7, 8 },
@@ -68,9 +68,9 @@ const std::vector<std::vector<int>> Const::compMap = {
         { 3, 5, 6, 9 },
         { 3, 5, 7, 8 },
         { 3, 5, 7, 9 }
-};
+}};
 
-const std::vector<std::string> Const::nameMap = {
+const std::array<std::string, 10> Const::nameMap = {
         "Pintel CPU 3 GHz",
         "Pintel CPU 5 GHz",
         "IMD CPU 3GHz",

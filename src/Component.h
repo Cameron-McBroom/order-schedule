@@ -29,3 +29,4 @@ std::string Component::getName() const {
 		return Const::nameMap[id_];
 	}
 }
+
