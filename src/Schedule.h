@@ -18,15 +18,15 @@ protected:
     std::vector<Order> ordersReceived_;
     std::vector<Order> ordersSatisfied_;
     std::vector<Order> ordersCancelled_;
-    std::unordered_map<int, int> PCsProduce_;
-    std::unordered_map<std::string, int> componentProduce_;
+    std::unordered_map<int, int> PCsProduced_;
+    std::unordered_map<std::string, int> componentsProduced_;
     int totalCyclesUsed_;
     int totalRevenue_;
     double totalCancelCost_;
     double discount_;
     double grossProfit_;
     double netProfit_;
-    void calculateDiscount();
+    void addDiscountToNetProfit();
     double salesExpenses();
     double orderDiscount(const Order & order);
 
@@ -48,11 +48,11 @@ void Schedule::createSchedule() {
         if (totalCyclesUsed_ < Const::MAX_CYCLES && totalCyclesUsed_ + order.getCycles() <= Const::MAX_CYCLES) {
             ordersSatisfied_.push_back(order);
             totalCyclesUsed_ += order.getCycles();
-            PCsProduce_[order.getPCId()] += order.getQuantity();
+            PCsProduced_[order.getPCId()] += order.getQuantity();
 
             // Loop through components used and add to component map
             for (int i = 0; i < 4; i++)
-                componentProduce_[order.getCompName(i)] += order.getQuantity();
+                componentsProduced_[order.getComponentName(i)] += order.getQuantity();
 
             // Add profit & rev for each order
             totalRevenue_ += order.getRevenue();
@@ -63,11 +63,11 @@ void Schedule::createSchedule() {
             totalCancelCost_ += order.getCancelCost();
         }
     }
-    calculateDiscount();
+    addDiscountToNetProfit();
 }
 
-void Schedule::calculateDiscount() {
-    for (auto const &pair: componentProduce_)
+void Schedule::addDiscountToNetProfit() {
+    for (auto const &pair: componentsProduced_)
         if (pair.first.find("CPU") != std::string::npos && pair.second >= Const::CPU_DISC_REQ) {
             discount_ += (Const().compPrice(pair.first) * pair.second) * Const::CPU_DISCOUNT;
         }
@@ -107,12 +107,12 @@ void Schedule::makeReport(std::ostream &out) {
 
     out << "===========================================================" << std::endl;
     out << "NO. PC PRODUCED" << std::endl;
-    for (int i = 0; i < PCsProduce_.size(); i++)
-        out << std::setw(30) << std::left << std::setfill('_') << ("PC" + std::to_string(i)) << PCsProduce_[i] << std::endl;
+    for (int i = 0; i < PCsProduced_.size(); i++)
+        out << std::setw(30) << std::left << std::setfill('_') << ("PC" + std::to_string(i)) << PCsProduced_[i] << std::endl;
 
     out << "===========================================================" << std::endl;
     out << "NO. COMPONENTS USED" << std::endl;
-    for (auto const &pair: componentProduce_)
+    for (auto const &pair: componentsProduced_)
         out << std::setw(30) << std::left << pair.first << std::right << pair.second << std::endl;
 
     out << std::setfill(' ') << std::endl;
@@ -121,8 +121,8 @@ void Schedule::makeReport(std::ostream &out) {
 double Schedule::orderDiscount(const Order &order) {
     double orderDiscount{0};
     for (int i = 0; i < 4; i++)
-        if (order.getCompName(i).find("CPU") != std::string::npos && componentProduce_[order.getCompName(i)] > 500)
-            orderDiscount += Const().compPrice(order.getCompName(i)) * order.getQuantity() * Const::CPU_DISCOUNT;
+        if (order.getComponentName(i).find("CPU") != std::string::npos && componentsProduced_[order.getComponentName(i)] > 500)
+            orderDiscount += Const().compPrice(order.getComponentName(i)) * order.getQuantity() * Const::CPU_DISCOUNT;
     return orderDiscount;
 }
 

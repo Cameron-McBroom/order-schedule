@@ -14,6 +14,8 @@ public:
     Date operator - (const int &days);
     Date operator + (const int &days);
     friend std::ostream& operator<<(std::ostream& os, const Date &dt);
+    friend bool operator>(const Date &date1, const Date &date2);
+    friend bool operator<(const Date &date1, const Date &date2);
     void setDate(int day, int month, int year);
     long daysUntil(const Date &dt);
 };
@@ -96,6 +98,14 @@ long Date::daysUntil(const Date &dt) {
     return days;
 }
 
+bool operator>(const Date &date1, const Date &date2) {
+    std::time_t lhsTime = date1.dateToTime();
+    std::time_t rhsTime = date2.dateToTime();
+    return lhsTime > rhsTime;
+}
 
-
-// 10/12/20 ---- 5/10/21
+bool operator<(const Date &date1, const Date &date2) {
+    std::time_t lhsTime = date1.dateToTime();
+    std::time_t rhsTime = date2.dateToTime();
+    return lhsTime < rhsTime;
+}

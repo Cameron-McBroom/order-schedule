@@ -1,44 +1,44 @@
 TOP LEVEL METRICS
 Total orders: 142
-Orders Satisfied: 102
-Orders Cancelled: 40
-Total Cycles Used: 9998
+Orders Satisfied: 101
+Orders Cancelled: 41
+Total Cycles Used: 9996
 ===========================================================
 PROFIT AND REVENUE
-Total Revenue:                                $  4,683,950
-Operational / Selling Expenses:               $ -1,453,079
-Total Cycle Cost:                             $   -999,800
-Total Cancellation Cost:                      $    -30,373
+Total Revenue:                                $  4,732,950
+Operational / Selling Expenses:               $ -1,478,704
+Total Cycle Cost:                             $   -999,600
+Total Cancellation Cost:                      $    -28,903
 
-Gross Profit (after cancellations):           $  2,483,253
-Net Profit (including discounts):             $  2,858,913
+Gross Profit (after cancellations):           $  2,507,208
+Net Profit (including discounts):             $  2,792,868
 ===========================================================
 NO. PC PRODUCED
 PC0___________________________198
-PC1___________________________179
-PC2___________________________156
+PC1___________________________182
+PC2___________________________170
 PC3___________________________68
-PC4___________________________0
-PC5___________________________50
-PC6___________________________28
+PC4___________________________84
+PC5___________________________112
+PC6___________________________30
 PC7___________________________53
-PC8___________________________113
-PC9___________________________76
-PC10__________________________188
-PC11__________________________140
+PC8___________________________101
+PC9___________________________36
+PC10__________________________117
+PC11__________________________92
 PC12__________________________204
 PC13__________________________187
 PC14__________________________255
 ===========================================================
 NO. COMPONENTS USED
-Pintel CPU 5 GHz______________131
-IMD CPU 3GHz__________________517
-Pintel motherboard____________732
-Pintel CPU 3 GHz______________601
-Hard disk 1TB_________________1094
-Memory 8 GB___________________1007
-IMD motherboard_______________1163
-Hard disk 2TB_________________801
-Memory 16 GB__________________888
+IMD CPU 3GHz__________________346
+Pintel CPU 5 GHz______________279
+Pintel motherboard____________897
+Pintel CPU 3 GHz______________618
+Hard disk 1TB_________________1134
+Memory 8 GB___________________1104
+IMD motherboard_______________992
+Hard disk 2TB_________________755
+Memory 16 GB__________________785
 IMD CPU 5GHz__________________646
 

@@ -6,7 +6,7 @@
 class Order {
 private:
     Date dueDate_;
-    Product p;
+    Product product_;
     int orderId_;
     int PCId_;
     int quantity_;
@@ -29,31 +29,32 @@ public:
     int getRevenue() const;
     double getCancelCost() const;
     double getDiscount() const;
-    std::string getCompName(int index) const;
+    std::string getComponentName(int index) const;
     std::unordered_map<std::string, int> getCPUsUsed() const;
 
     friend bool operator>(const Order &order1, const Order &order2);
     friend bool operator>=(const Order &order1, const Order &order2);
     friend bool operator<(const Order &order1, const Order &order2);
     friend bool operator<=(const Order &order1, const Order &order2);
-    Order &operator+= (double x);
-    Order &operator+= (int x);
-    Order &operator-= (double x);
-    Order &operator-= (int x);
+
+    template<typename Num, typename = typename std::enable_if<std::is_arithmetic<Num>::value, Num>::type>
+    Order &operator+= (Num x);
+    template<typename Num, typename = typename std::enable_if<std::is_arithmetic<Num>::value, Num>::type>
+    Order &operator-= (Num x);
 
 };
 
 Order::Order(int orderId, int PCId, int quantity, int unitProfitRate)
 : orderId_(orderId), PCId_(PCId), quantity_(quantity), unitProfitRate_(unitProfitRate), cpuUsed_(0),
-    dueDate_(1,1,1), p(PCId), discount_(0)
+  dueDate_(1,1,1), product_(PCId), discount_(0)
 {
-    revenue_ = p.getCost() * quantity_;
-    profit_ = (p.getCost() * (static_cast<double>(unitProfitRate_)/100)) * quantity_;
-    cycles_ = Const::cycleMap[p.getId()] * quantity_;
-    cancelCost_ = (p.getCost() * quantity_) * Const::CANCELLATION_PENALTY;
+    revenue_ = product_.getCost() * quantity_;
+    profit_ = (product_.getCost() * (static_cast<double>(unitProfitRate_) / 100)) * quantity_;
+    cycles_ = Const::cycleMap[product_.getId()] * quantity_;
+    cancelCost_ = (product_.getCost() * quantity_) * Const::CANCELLATION_PENALTY;
 
     // Loop through components used and add to component map
-    for (const auto &comp : p.getComponents()) {
+    for (const auto &comp : product_.getComponents()) {
         if (comp.getName().find("CPU") != std::string::npos){
             cpuUsed_[comp.getName()] += quantity_;
             discount_ += (comp.getCost() * quantity_) - ((comp.getCost() * quantity_) * Const::CPU_DISCOUNT);
@@ -61,8 +62,8 @@ Order::Order(int orderId, int PCId, int quantity, int unitProfitRate)
     }
 }
 
-std::string Order::getCompName(int index) const {
-    return p.getComponents()[index].getName();
+std::string Order::getComponentName(int index) const {
+    return product_.getComponents()[index].getName();
 }
 
 double Order::getProfitTotal() const { return profit_; }
@@ -78,8 +79,6 @@ int Order::getOrderId() const { return orderId_; }
 double Order::getCancelCost() const { return cancelCost_; }
 
 int Order::getRevenue() const { return revenue_; }
-
-double Order::getDiscount() const { return discount_; }
 
 std::unordered_map<std::string, int> Order::getCPUsUsed() const { return cpuUsed_; }
 
@@ -99,22 +98,14 @@ bool operator<=(const Order &order1, const Order &order2) {
     return order1.profit_ <= order2.profit_;
 }
 
-Order &Order::operator+=(double x) {
+template<typename Num, typename>
+Order &Order::operator+=(Num x) {
     this->profit_ += x;
     return *this;
 }
 
-Order &Order::operator+=(int x) {
-    this->profit_ += x;
-    return *this;
-}
-
-Order &Order::operator-=(double x) {
-    this->profit_ -= x;
-    return *this;
-}
-
-Order &Order::operator-=(int x) {
+template<typename Num, typename>
+Order &Order::operator-=(Num x) {
     this->profit_ -= x;
     return *this;
 }

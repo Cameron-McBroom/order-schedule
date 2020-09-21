@@ -7,7 +7,7 @@ template <class T>
 class QuickSort {
 private:
     std::vector<T> values_;
-    bool reversed_;
+    bool ascending_;
 
     int partition (int low, int high) {
         T pivot = values_[high];
@@ -34,11 +34,11 @@ private:
     }
 
 public:
-    QuickSort(std::vector<T> values, bool reversed = false) : values_(values), reversed_(reversed) {}
+    QuickSort(std::vector<T> values, bool ascending = false) : values_(values), ascending_(ascending) {}
 
     std::vector<T>& operator()() {
         quickSort(0, values_.size() - 1);
-        if (reversed_) std::reverse(values_.begin(), values_.end());
+        if (!ascending_) std::reverse(values_.begin(), values_.end());
         return values_;
     }
 };
