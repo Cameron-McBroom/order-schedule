@@ -11,7 +11,7 @@ private:
     int PCId_;
     int quantity_;
     int unitProfitRate_;
-    int revenue_;
+    double revenue_;
     double profit_;
     int cycles_;
     double cancelCost_;
@@ -27,8 +27,8 @@ public:
     int getQuantity() const;
     int getOrderId() const;
     int getRevenue() const;
+    int getProductCost() const;
     double getCancelCost() const;
-    double getDiscount() const;
     std::string getComponentName(int index) const;
     std::unordered_map<std::string, int> getCPUsUsed() const;
 
@@ -48,10 +48,10 @@ Order::Order(int orderId, int PCId, int quantity, int unitProfitRate)
 : orderId_(orderId), PCId_(PCId), quantity_(quantity), unitProfitRate_(unitProfitRate), cpuUsed_(0),
   dueDate_(1,1,1), product_(PCId), discount_(0)
 {
-    revenue_ = product_.getCost() * quantity_;
     profit_ = (product_.getCost() * (static_cast<double>(unitProfitRate_) / 100)) * quantity_;
+    revenue_ = (product_.getCost() * quantity_) + profit_;
     cycles_ = Const::cycleMap[product_.getId()] * quantity_;
-    cancelCost_ = (product_.getCost() * quantity_) * Const::CANCELLATION_PENALTY;
+    cancelCost_ = revenue_ * Const::CANCELLATION_PENALTY;
 
     // Loop through components used and add to component map
     for (const auto &comp : product_.getComponents()) {
@@ -79,6 +79,10 @@ int Order::getOrderId() const { return orderId_; }
 double Order::getCancelCost() const { return cancelCost_; }
 
 int Order::getRevenue() const { return revenue_; }
+
+int Order::getProductCost() const {
+    return product_.getCost() * quantity_;
+}
 
 std::unordered_map<std::string, int> Order::getCPUsUsed() const { return cpuUsed_; }
 
@@ -109,6 +113,8 @@ Order &Order::operator-=(Num x) {
     this->profit_ -= x;
     return *this;
 }
+
+
 
 
 

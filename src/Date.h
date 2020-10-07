@@ -52,8 +52,6 @@ std::time_t Date::badTime() {
     return time_t(-1);
 }
 
-
-
 Date Date::operator-(const int &days) {
     date_.tm_mday -= days;
     while (date_.tm_mday < 0) {

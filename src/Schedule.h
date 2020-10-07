@@ -23,6 +23,7 @@ protected:
     int totalCyclesUsed_;
     int totalRevenue_;
     double totalCancelCost_;
+    double totalPCCost_;
     double discount_;
     double grossProfit_;
     double netProfit_;
@@ -57,6 +58,7 @@ void Schedule::createSchedule() {
             // Add profit & rev for each order
             totalRevenue_ += order.getRevenue();
             grossProfit_ += order.getProfitTotal();
+            totalPCCost_ += order.getProductCost();
 
         } else {
             ordersCancelled_.push_back(order);
@@ -71,7 +73,7 @@ void Schedule::addDiscountToNetProfit() {
         if (pair.first.find("CPU") != std::string::npos && pair.second >= Const::CPU_DISC_REQ) {
             discount_ += (Const().compPrice(pair.first) * pair.second) * Const::CPU_DISCOUNT;
         }
-    netProfit_ = grossProfit_ + discount_;
+    netProfit_ = grossProfit_ + discount_ - totalCancelCost_;
 }
 
 double Schedule::salesExpenses() {
@@ -91,16 +93,14 @@ void Schedule::makeReport(std::ostream &out) {
         << std::setw(11) << std::right << util::numWCommas(totalRevenue_) << std::endl;
 
     out << std::setw(46) << std::left << "Operational / Selling Expenses:" << "$"
-        << std::setw(11) << std::right << "-" + util::numWCommas(salesExpenses(),0) << std::endl;
+        << std::setw(11) << std::right << "-" + util::numWCommas(totalPCCost_, 0) << std::endl;
 
-    out << std::setw(46) << std::left << "Total Cycle Cost: " << "$"
-        << std::setw(11) << std::right << "-" + util::numWCommas(totalCyclesUsed_ * Const::CYCLE_COST) << std::endl;
+
+    out << std::setw(46) << std::left <<"Gross Profit (before cancellations):" << "$"
+        << std::setw(11) << std::right << util::numWCommas(grossProfit_, 0) << std::endl << std::endl;
 
     out << std::setw(46) << std::left << "Total Cancellation Cost:" << "$"
-        << std::setw(11) << std::right << "-" + util::numWCommas(totalCancelCost_,0) << std::endl << std::endl;
-
-    out << std::setw(46) << std::left <<"Gross Profit (after cancellations):" << "$"
-        << std::setw(11) << std::right << util::numWCommas(grossProfit_, 0) << std::endl;
+        << std::setw(11) << std::right << "-" + util::numWCommas(totalCancelCost_,0) << std::endl;
 
     out << std::setw(46) << std::left << "Net Profit (including discounts):" << "$"
         << std::setw(11) << std::right << util::numWCommas(netProfit_, 0) << std::endl;

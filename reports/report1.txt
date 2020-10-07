@@ -5,13 +5,12 @@ Orders Cancelled: 52
 Total Cycles Used: 9996
 ===========================================================
 PROFIT AND REVENUE
-Total Revenue:                                $  4,610,900
-Operational / Selling Expenses:               $ -1,352,493
-Total Cycle Cost:                             $   -999,600
-Total Cancellation Cost:                      $    -31,141
+Total Revenue:                                $  6,994,116
+Operational / Selling Expenses:               $-13,784,500
+Gross Profit (before cancellations):          $  2,383,235
 
-Gross Profit (after cancellations):           $  2,383,235
-Net Profit (including discounts):             $  2,542,355
+Total Cancellation Cost:                      $    -43,539
+Net Profit (including discounts):             $  2,498,815
 ===========================================================
 NO. PC PRODUCED
 PC0___________________________27
