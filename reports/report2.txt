@@ -1,43 +1,43 @@
 TOP LEVEL METRICS
 Total orders: 142
-Orders Satisfied: 101
-Orders Cancelled: 41
-Total Cycles Used: 9996
+Orders Satisfied: 116
+Orders Cancelled: 26
+Total Cycles Used: 10000
 ===========================================================
 PROFIT AND REVENUE
-Total Revenue:                                $  7,240,148
-Operational / Selling Expenses:               $-23,128,350
-Gross Profit (before cancellations):          $  2,507,208
+Total Revenue:                                $  7,309,626
+Operational / Selling Expenses:               $ -4,744,350
+Gross Profit (before cancellations):          $  2,565,290
 
-Total Cancellation Cost:                      $    -40,917
-Net Profit (including discounts):             $  2,751,950
+Total Cancellation Cost:                      $    -38,832
+Net Profit (including discounts):             $  2,812,117
 ===========================================================
 NO. PC PRODUCED
 PC0___________________________198
 PC1___________________________182
 PC2___________________________170
 PC3___________________________68
-PC4___________________________84
-PC5___________________________112
-PC6___________________________30
-PC7___________________________53
-PC8___________________________101
-PC9___________________________36
-PC10__________________________117
-PC11__________________________92
+PC4___________________________80
+PC5___________________________79
+PC6___________________________47
+PC7___________________________59
+PC8___________________________134
+PC9___________________________55
+PC10__________________________110
+PC11__________________________73
 PC12__________________________204
 PC13__________________________187
 PC14__________________________255
 ===========================================================
 NO. COMPONENTS USED
-IMD CPU 3GHz__________________346
-Pintel CPU 5 GHz______________279
-Pintel motherboard____________897
+Pintel CPU 5 GHz______________265
+IMD CPU 3GHz__________________372
+Pintel motherboard____________883
 Pintel CPU 3 GHz______________618
-Hard disk 1TB_________________1134
-Memory 8 GB___________________1104
-IMD motherboard_______________992
-Hard disk 2TB_________________755
-Memory 16 GB__________________785
+Hard disk 1TB_________________1161
+Memory 8 GB___________________1119
+IMD motherboard_______________1018
+Hard disk 2TB_________________740
+Memory 16 GB__________________782
 IMD CPU 5GHz__________________646
 

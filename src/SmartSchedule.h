@@ -50,6 +50,29 @@ public:
             }
             order -= extraVal;
         }
+    }
 
+    void createSchedule() {
+        for (const auto &order: ordersReceived_) {
+            if (totalCyclesUsed_ < Const::MAX_CYCLES && totalCyclesUsed_ + order.getCycles() <= Const::MAX_CYCLES) {
+                ordersSatisfied_.push_back(order);
+                totalCyclesUsed_ += order.getCycles();
+                PCsProduced_[order.getPCId()] += order.getQuantity();
+
+                // Loop through components used and add to component map
+                for (int i = 0; i < 4; i++)
+                    componentsProduced_[order.getComponentName(i)] += order.getQuantity();
+
+                // Add profit & rev for each order
+                totalRevenue_ += order.getRevenue();
+                grossProfit_ += order.getProfitTotal();
+                totalPCCost_ += order.getProductCost();
+
+            } else {
+                ordersCancelled_.push_back(order);
+                totalCancelCost_ += order.getCancelCost();
+            }
+        }
+        addDiscountToNetProfit();
     }
 };

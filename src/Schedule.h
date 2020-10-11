@@ -32,17 +32,29 @@ protected:
     double orderDiscount(const Order & order);
 
 public:
+    Schedule();
+    Schedule(std::vector<Order> orders);
     Schedule(std::istream &orderBundle);
     virtual ~Schedule() = default;
     virtual void createSchedule();
     void makeReport(std::ostream &out);
     void makeReport(csvfile &csv);
+    double getNetProfit();
 };
 
-Schedule::Schedule(std::istream &orderBundle)
-    : ordersReceived_(ParseOrders()(orderBundle)),
-      totalCyclesUsed_(0), grossProfit_(0), netProfit_(0), totalRevenue_(0), discount_(0), totalCancelCost_(0)
-{}
+Schedule::Schedule(std::istream &orderBundle): Schedule()
+{
+    ordersReceived_ = ParseOrders()(orderBundle);
+}
+
+Schedule::Schedule(std::vector<Order> orders): Schedule() {
+    ordersReceived_ = std::move(orders);
+}
+
+Schedule::Schedule()
+    : totalCyclesUsed_(0), grossProfit_(0), netProfit_(0),
+    totalRevenue_(0), discount_(0), totalCancelCost_(0), totalPCCost_(0) {}
+
 
 void Schedule::createSchedule() {
     for (const auto &order: ordersReceived_) {
@@ -146,5 +158,9 @@ void Schedule::makeReport(csvfile &csv) {
             << order.getProfitTotal() << order.getCancelCost() << endrow;
     csv << "TOTALS" << "" << "" << grossProfit_ << discount_ << totalCancelCost_ << endrow;
 
+}
+
+double Schedule::getNetProfit() {
+    return netProfit_;
 }
 

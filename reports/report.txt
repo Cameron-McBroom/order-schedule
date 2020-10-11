@@ -1,26 +1,26 @@
 TOP LEVEL METRICS
 Total orders: 181
-Orders Satisfied: 113
-Orders Cancelled: 68
+Orders Satisfied: 129
+Orders Cancelled: 52
 Total Cycles Used: 10000
 ===========================================================
 PROFIT AND REVENUE
-Total Revenue:                                $  7,072,789
-Operational / Selling Expenses:               $ -4,586,800
-Gross Profit (before cancellations):          $  2,486,005
+Total Revenue:                                $  7,169,097
+Operational / Selling Expenses:               $ -4,625,900
+Gross Profit (before cancellations):          $  2,543,215
 
-Total Cancellation Cost:                      $    -81,367
-Net Profit (including discounts):             $  2,712,527
+Total Cancellation Cost:                      $    -78,478
+Net Profit (including discounts):             $  2,772,626
 ===========================================================
 NO. PC PRODUCED
-PC0___________________________54
+PC0___________________________75
 PC1___________________________28
-PC2___________________________21
-PC3___________________________85
-PC4___________________________63
-PC5___________________________26
-PC6___________________________51
-PC7___________________________83
+PC2___________________________74
+PC3___________________________4
+PC4___________________________82
+PC5___________________________42
+PC6___________________________63
+PC7___________________________65
 PC8___________________________186
 PC9___________________________161
 PC10__________________________153
@@ -31,14 +31,14 @@ PC14__________________________247
 PC15__________________________125
 ===========================================================
 NO. COMPONENTS USED
-Pintel motherboard____________411
-Memory 8 GB___________________793
-Pintel CPU 5 GHz______________223
+Pintel motherboard____________433
+Pintel CPU 3 GHz______________181
+Hard disk 1TB_________________1057
+Pintel CPU 5 GHz______________252
 IMD CPU 3GHz__________________740
-Pintel CPU 3 GHz______________188
-Hard disk 1TB_________________952
+Memory 8 GB___________________849
 IMD motherboard_______________1387
-Hard disk 2TB_________________846
-Memory 16 GB__________________1005
+Memory 16 GB__________________971
+Hard disk 2TB_________________763
 IMD CPU 5GHz__________________647
 

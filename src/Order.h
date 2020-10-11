@@ -13,6 +13,7 @@ private:
     int unitProfitRate_;
     double revenue_;
     double profit_;
+    double profitPerCycle_;
     int cycles_;
     double cancelCost_;
     double discount_;
@@ -52,6 +53,7 @@ Order::Order(int orderId, int PCId, int quantity, int unitProfitRate)
     revenue_ = (product_.getCost() * quantity_) + profit_;
     cycles_ = Const::cycleMap[product_.getId()] * quantity_;
     cancelCost_ = revenue_ * Const::CANCELLATION_PENALTY;
+    profitPerCycle_ = profit_ / cycles_;
 
     // Loop through components used and add to component map
     for (const auto &comp : product_.getComponents()) {
@@ -87,30 +89,32 @@ int Order::getProductCost() const {
 std::unordered_map<std::string, int> Order::getCPUsUsed() const { return cpuUsed_; }
 
 bool operator>(const Order &order1, const Order &order2) {
-    return order1.profit_ > order2.profit_;
+    return order1.profitPerCycle_ > order2.profitPerCycle_;
 }
 
 bool operator>=(const Order &order1, const Order &order2) {
-    return order1.profit_ >= order2.profit_;
+    return order1.profitPerCycle_ >= order2.profitPerCycle_;
 }
 
 bool operator<(const Order &order1, const Order &order2) {
-    return order1.profit_ < order2.profit_;
+    return order1.profitPerCycle_ < order2.profitPerCycle_;
 }
 
 bool operator<=(const Order &order1, const Order &order2) {
-    return order1.profit_ <= order2.profit_;
+    return order1.profitPerCycle_ <= order2.profitPerCycle_;
 }
 
 template<typename Num, typename>
 Order &Order::operator+=(Num x) {
     this->profit_ += x;
+    profitPerCycle_ = profit_ / cycles_;
     return *this;
 }
 
 template<typename Num, typename>
 Order &Order::operator-=(Num x) {
     this->profit_ -= x;
+    profitPerCycle_ = profit_ / cycles_;
     return *this;
 }
 
